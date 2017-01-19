@@ -5,7 +5,7 @@
 #include <math.h>
 
 #define MPSIZE 10
-#define SPEED 5
+#define SPEED 10
 #define BALLRAD 0.025
 #define BLOCKSIZE 0.1
 
@@ -16,16 +16,16 @@ typedef struct a3d{
       float z; 
 }_3d;
            //koordinate lopte                                                                     
-static _3d ball  = { 0,                        
-                    -0.95 },
+static _3d ball  = { ball.x = 0,                        
+                    ball.y=-0.95 },
            //pocetne koordinate lopte        
-           ball_s_poz = { 0,             
-                          -0.95,
-                          0 },
+           ball_s_poz = { ball_s_poz.x = 0,             
+                          ball_s_poz.y = -0.95,
+                          ball_s_poz.z = 0 },
            //vektor lopte            
-           ballvec = { 1,                   
-                       1,
-                       0 };
+           ballvec = { ballvec.x = 1,                   
+                       ballvec.y = 1,
+                       ballvec.z=0 };
              //brojaci pomeraja lopte          
 static float ball_parameter_x=0,
              ball_parameter_y=0,
@@ -45,7 +45,8 @@ static int animation_active,
            //flag pomeranja paddlea
            paddle_mov=0,
            //selektovanje ravni
-           color_sel=0;
+           color_sel=0,
+           col_fix=0;
 
 static int map[3*MPSIZE][MPSIZE]={{0}};
 
@@ -87,7 +88,7 @@ int main(int argc, char **argv)
     glutTimerFunc(SPEED, on_timer, 0);
 
     
-    glClearColor(0.6, 0.4, 0, 0);
+    glClearColor(0.6, 0.6, 0, 0);
     glEnable(GL_DEPTH_TEST);
 
     
@@ -261,6 +262,7 @@ static void on_timer(int value)
         collision_bw();
         collision_bp();
         collision_bb();
+        
     }
     //racunanje ugla rotacije vertikalno
     if(!(rot_ver==0)){
@@ -484,7 +486,7 @@ static void draw_blocks_bg(void)
             if(!map[i][j]){
                 glPushMatrix();
                 
-                coloring( 1, 0.1, 0.1, 0);
+                coloring( 1, 0, 0, 0);
                 glTranslatef(-0.45 + i*BLOCKSIZE, 0.45 - j*BLOCKSIZE, 0);
                 glScalef(0.85, 0.85, 0.2);
                 glutSolidCube(BLOCKSIZE);
@@ -588,6 +590,7 @@ static void collision_bp(void)
         ball_s_poz.x = ball.x;
         //promena vektora
         ballvec.y = -ballvec.y;
+        ballvec.x = ballvec.x + (ball.x - paddle_poz)*2;
         //reset brojaca
         ball_parameter_y = 0;
         ball_parameter_x = 0;
@@ -601,43 +604,18 @@ static void collision_bb(void)
     //racucanje samo unutar matrice
     if(ball.y >= -0.5 - BALLRAD){
         //racunanje mozicije u matrici
-        j = ceil(-(ball.y + ballvec.y * BALLRAD) * 10) + 4;
-        i = ceil((ball.x - ballvec.x * BALLRAD) * 10) + 4;
-        
-        if(ballvec.x > 0){
-            //desna kolizija
-            //provera da li postoji kvadrat za koliziju
-            if(j < MPSIZE && !map[i + 1 + color_sel * MPSIZE][j])                         
-                if(ball.x + BALLRAD >= (i - 4) * BLOCKSIZE){
-                    
-                    ball_s_poz.x = (i - 4) * BLOCKSIZE - BALLRAD;
-                    
-                    ballvec.x = -ballvec.x;
-                    ball_parameter_x = 0;
-                    //nestajanje kvadrata
-                    map[i + 1 + color_sel * MPSIZE][j] = 1;
-
-                }
-        }
+        if(ballvec.y>=0)
+        j = ceil(-(ball.y + BALLRAD) * 10) + 4;
         else
-            //leva kolizija
-            //provera da li postoji kvadrat za koliziju
-            if(j < MPSIZE && !map[i - 1 + color_sel * MPSIZE][j])
-                if(ball.x - BALLRAD <= (i - 5) * BLOCKSIZE){
-                    
-                    ball_s_poz.x = (i - 5) * BLOCKSIZE + BALLRAD;
-                    
-                    ballvec.x = -ballvec.x;
-                    ball_parameter_x = 0;
-                    //nestajanje kvadrata
-                    map[i - 1 + color_sel * MPSIZE][j] = 1;
-
-                }
-        
+        j = ceil(-(ball.y - BALLRAD) * 10) + 4;
+        if(ballvec.x>=0)
+        i = ceil((ball.x - BALLRAD) * 10) + 4;
+        else
+        i = ceil((ball.x + BALLRAD) * 10) + 4;
         if(ballvec.y > 0){
-            //gornja kolizija
-            //provera da li postoji kvadrat za koliziju
-            if(j < MPSIZE && !map[i + color_sel * MPSIZE][j])
+            //donja kolizija
+            //provera da li postoji kvadrat za koliziju i popravka buga 
+            if(col_fix==0 && j < MPSIZE && !map[i + color_sel * MPSIZE][j]){
                 if(ball.y + BALLRAD >= -(j - 4) * BLOCKSIZE){
                     
                     ball_s_poz.y = -(j - 4) * BLOCKSIZE - BALLRAD;
@@ -646,13 +624,14 @@ static void collision_bb(void)
                     ball_parameter_y = 0;
                     //nestajanje kvadrata
                     map[i + color_sel * MPSIZE][j] = 1;
-
+                    col_fix = 1;
                 }
-        }
+            }
+            else col_fix = 0;}
         else
-            //donja kolizija
-            //provera da li postoji kvadrat za koliziju
-            if(j < MPSIZE && !map[i + color_sel * MPSIZE][j])
+            //gornja kolizija
+            //provera da li postoji kvadrat za koliziju i popravka buga
+            if(col_fix==0 && j < MPSIZE && !map[i + color_sel * MPSIZE][j]){
                 if(ball.y - BALLRAD <= -(j - 5) * BLOCKSIZE){
                     
                     ball_s_poz.y = -(j - 5) * BLOCKSIZE + BALLRAD;
@@ -661,9 +640,44 @@ static void collision_bb(void)
                     ball_parameter_y = 0;
                     //nestajanje kvadrata
                     map[i + color_sel * MPSIZE][j] = 1;
-
+                    col_fix = 1;
                 }
+            }
+            else col_fix = 0;
+        if(ballvec.x > 0){
+            //desna kolizija
+            //provera da li postoji kvadrat za koliziju i popravka buga
+            if(col_fix==0 && ball.y >= -0.5 && j < MPSIZE && !map[i + 1 + color_sel * MPSIZE][j]){                       
+                if(ball.x + BALLRAD >= (i - 4) * BLOCKSIZE){
                     
+                    ball_s_poz.x = (i - 4) * BLOCKSIZE - BALLRAD;
+                    
+                    ballvec.x = -ballvec.x;
+                    ball_parameter_x = 0;
+                    //nestajanje kvadrata
+                    map[i + 1 + color_sel * MPSIZE][j] = 1;
+                    col_fix = 1;
+                }
+            }
+            else col_fix = 0;
+        }
+        else
+            //leva kolizija
+            //provera da li postoji kvadrat za koliziju i popravka buga
+            if(col_fix==0 && ball.y >= -0.5 && j < MPSIZE && !map[i - 1 + color_sel * MPSIZE][j]){
+                if(ball.x - BALLRAD <= (i - 5) * BLOCKSIZE){
+                    
+                    ball_s_poz.x = (i - 5) * BLOCKSIZE + BALLRAD;
+                    
+                    ballvec.x = -ballvec.x;
+                    ball_parameter_x = 0;
+                    //nestajanje kvadrata
+                    map[i - 1 + color_sel * MPSIZE][j] = 1;
+                    col_fix = 1;
+                }
+            }
+            else col_fix = 0;
+        
+
     }
-    
 }
