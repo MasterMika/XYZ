@@ -23,7 +23,7 @@ static _3d ball  = { ball.x = 0,
                           ball_s_poz.y = -0.95,
                           ball_s_poz.z = 0 },
            //vektor lopte            
-           ballvec = { ballvec.x = 1,                   
+           ballvec = { ballvec.x = 0,                   
                        ballvec.y = 1,
                        ballvec.z=0 };
              //brojaci pomeraja lopte          
@@ -576,7 +576,7 @@ static void collision_bw(void)
         ball_parameter_x = 0;
         ball_parameter_y = 0;
         //reset vektora
-        ballvec.x = 1;
+        ballvec.x = 0;
         ballvec.y = 1;
         }
 }
