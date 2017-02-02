@@ -16,39 +16,39 @@ typedef struct a3d{
       float z; 
 }_3d;
            //koordinate lopte                                                                     
-static _3d ball  = { ball.x = 0,                        
-                    ball.y=-0.95 },
+static _3d ball  = {.x = 0,                        
+                    .y = -0.95 },
            //pocetne koordinate lopte        
-           ball_s_poz = { ball_s_poz.x = 0,             
-                          ball_s_poz.y = -0.95,
-                          ball_s_poz.z = 0 },
+           ball_s_poz = {.x = 0,             
+                         .y = -0.95,
+                         .z = 0 },
            //vektor lopte            
-           ballvec = { ballvec.x = 0,                   
-                       ballvec.y = 1,
-                       ballvec.z=0 };
+           ballvec = {.x = 0,                   
+                      .y = 1,
+                      .z = 0 };
              //brojaci pomeraja lopte          
-static float ball_parameter_x=0,
-             ball_parameter_y=0,
+static float ball_parameter_x = 0,
+             ball_parameter_y = 0,
              
-             paddle_poz=0;
+             paddle_poz = 0;
 
 static int animation_active,
            //aktivatori rotiranja
            rot_ver,
            rot_hor,
            //ugao rotiranja
-           ang_ver=0,
-           ang_hor=0,
+           ang_ver = 0,
+           ang_hor = 0,
            //flagovi pomeranja lopte
-           ball_start=0,
-           ball_move=0,
+           ball_start = 0,
+           ball_move = 0,
            //flag pomeranja paddlea
-           paddle_mov=0,
+           paddle_mov = 0,
            //selektovanje ravni
-           color_sel=0,
-           col_fix=0;
+           color_sel = 0,
+           col_fix = 0;
 
-static int map[3*MPSIZE][MPSIZE]={{0}};
+static int map[3*MPSIZE][MPSIZE] = {{0}};
 
 
 
@@ -75,7 +75,7 @@ int main(int argc, char **argv)
     glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
 
     glutInitWindowSize(400, 600);
-    glutInitWindowPosition( 100, 100);
+    glutInitWindowPosition(100, 100);
     glutCreateWindow(argv[0]);
     
     glutKeyboardUpFunc(up_keyboard);
@@ -126,38 +126,39 @@ static void up_keyboard(unsigned char key, int x, int y)
     case 'd':
     case 'D':
         //prekid pomeranja paddle a u desno
-        paddle_mov=0;
+        paddle_mov = 0;
         break;
         
     case 'a':
     case 'A':
         //prekid pomeranja paddle a u levo
-        paddle_mov=0;
+        paddle_mov = 0;
         break;
         
     case 'q':
     case 'Q':
         //biranje crvene ravni
-        if(rot_hor==0 && ball.y < -0.5){
+        if(rot_hor == 0 && ball.y < -0.5){
             
-            if(ang_hor==0 && ang_ver==90)
+            if(ang_hor == 0 && ang_ver == 90)
                 rot_ver = -1;
                 
-            if(ang_hor==90 && ang_ver==0)
+            if(ang_hor == 90 && ang_ver == 0)
                 rot_hor = -1;
                 
-            if((ang_hor==0 && ang_ver==90) || (ang_hor==90 && ang_ver==0)){
+            if((ang_hor == 0 && ang_ver == 90)
+                || (ang_hor == 90 && ang_ver == 0)){
                 //biranje boje
-                color_sel=0;
+                color_sel = 0;
                 //zaustavljanje lopte
-                ball_move=0;
+                ball_move = 0;
                 
-                ball_s_poz.x=ball.x;
-                ball_s_poz.y=ball.y;
-                ball_s_poz.z=0;
+                ball_s_poz.x = ball.x;
+                ball_s_poz.y = ball.y;
+                ball_s_poz.z = 0;
                 
-                ball_parameter_x=0;
-                ball_parameter_y=0;
+                ball_parameter_x = 0;
+                ball_parameter_y = 0;
             }
         }
         break;
@@ -165,27 +166,28 @@ static void up_keyboard(unsigned char key, int x, int y)
     case 'w':
     case 'W':
         //biranje zelene ravni
-        if(rot_hor==0 && ball.y < -0.5){
+        if(rot_hor == 0 && ball.y < -0.5){
             
-            if(ang_hor==0 && ang_ver==0)                                    
-                rot_ver=1;
+            if(ang_hor == 0 && ang_ver == 0)                                    
+                rot_ver = 1;
                 
-            if(ang_hor==90 && ang_ver==0){
-                rot_hor=-1;
-                rot_ver=1;
+            if(ang_hor == 90 && ang_ver == 0){
+                rot_hor = -1;
+                rot_ver = 1;
             }
             
-            if((ang_hor==0 && ang_ver==0) || (ang_hor==90 && ang_ver==0)){
-                color_sel=1;
+            if((ang_hor == 0 && ang_ver == 0) || 
+               (ang_hor == 90 && ang_ver == 0)){
+                color_sel = 1;
                 
-                ball_move=0;
+                ball_move = 0;
                 
-                ball_s_poz.x=ball.x;
-                ball_s_poz.y=ball.y;
-                ball_s_poz.z=0;
+                ball_s_poz.x = ball.x;
+                ball_s_poz.y = ball.y;
+                ball_s_poz.z = 0;
                 
-                ball_parameter_x=0;
-                ball_parameter_y=0;
+                ball_parameter_x = 0;
+                ball_parameter_y = 0;
             }
         }
         break;
@@ -193,27 +195,28 @@ static void up_keyboard(unsigned char key, int x, int y)
     case 'e':
     case 'E':
         //biranje plave ravni
-        if(rot_ver==0 && ball.y < -0.5){
+        if(rot_ver == 0 && ball.y < -0.5){
             
-            if(ang_ver==0 && ang_hor==0)
-                rot_hor=1;
+            if(ang_ver == 0 && ang_hor == 0)
+                rot_hor = 1;
                 
-            if(ang_ver==90 && ang_hor==0){
-                rot_ver=-1;
-                rot_hor=1;
+            if(ang_ver == 90 && ang_hor == 0){
+                rot_ver = -1;
+                rot_hor = 1;
             }
             
-            if((ang_ver==0 && ang_hor==0)||(ang_ver==90 && ang_hor==0)){
-                color_sel=2;
+            if((ang_ver == 0 && ang_hor == 0) ||
+               (ang_ver == 90 && ang_hor == 0)){
+                color_sel = 2;
                 
-                ball_move=0;  
+                ball_move = 0;  
                         
-                ball_s_poz.x=ball.x;
-                ball_s_poz.y=ball.y;
-                ball_s_poz.z=0;
+                ball_s_poz.x = ball.x;
+                ball_s_poz.y = ball.y;
+                ball_s_poz.z = 0;
                 
-                ball_parameter_x=0;
-                ball_parameter_y=0;
+                ball_parameter_x = 0;
+                ball_parameter_y = 0;
             }
         }
         break;
@@ -229,12 +232,12 @@ static void up_keyboard(unsigned char key, int x, int y)
     case 32:
         //aktiviranje lopte
         if(!ball_start){
-            ball_start=1;
-            ball_move=1;    
+            ball_start = 1;
+            ball_move = 1;    
         //pocetna poz lopte iznad paddle a          
-            ball_s_poz.x=paddle_poz;
-            ball_s_poz.y=-0.95;
-            ball_s_poz.z=0;
+            ball_s_poz.x = paddle_poz;
+            ball_s_poz.y = -0.95;
+            ball_s_poz.z = 0;
         }
         break;
     }
@@ -246,18 +249,18 @@ static void on_timer(int value)
         return;
     //pomeranje paddle a
     if(paddle_mov){
-        paddle_poz+=paddle_mov*0.01;
+        paddle_poz += paddle_mov*0.01;
         collision_pw();
     }
     
     if(ball_move&&ball_start){
         //pomeranje brojaca lopte
-        ball_parameter_x=ball_parameter_x+0.006;
-        ball_parameter_y=ball_parameter_y+0.006;
+        ball_parameter_x = ball_parameter_x + 0.006;
+        ball_parameter_y = ball_parameter_y + 0.006;
         //racunanje koordinata lopte
-        ball.x=ball_s_poz.x+ball_parameter_x*ballvec.x;
-        ball.y=ball_s_poz.y+ball_parameter_y*ballvec.y;
-        ball.z=0;
+        ball.x = ball_s_poz.x + ball_parameter_x * ballvec.x;
+        ball.y = ball_s_poz.y + ball_parameter_y * ballvec.y;
+        ball.z = 0;
         //kolizije
         collision_bw();
         collision_bp();
@@ -265,21 +268,23 @@ static void on_timer(int value)
         
     }
     //racunanje ugla rotacije vertikalno
-    if(!(rot_ver==0)){
+    if(!(rot_ver == 0)){
         //promena ugla
-        ang_ver=ang_ver+2*rot_ver;
+        ang_ver = ang_ver + 2*rot_ver;
         //zaustavljanje rotiranja i restart lopte
-        if (!(ang_ver%90)){ 
-            rot_ver=0;
-            ball_move=1;
+        if (!(ang_ver % 90)){ 
+            rot_ver = 0;
+            ball_move = 1;
             }
     }
     //racunanje ugla rotacije horizontalno
-    if(!(rot_hor==0)){
-        ang_hor=ang_hor+2*rot_hor;
-        if (!(ang_hor%90)){  
-            rot_hor=0;
-            ball_move=1;
+    if(!(rot_hor == 0)){
+        
+        ang_hor = ang_hor + 2*rot_hor;
+        
+        if (!(ang_hor % 90)){  
+            rot_hor = 0;
+            ball_move = 1;
         }
     }
     
@@ -313,7 +318,7 @@ static void on_display(void)
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(0., 0, 2, 0., 0, 0, 0, 1, 0);
+    gluLookAt(0, 0, 2, 0., 0, 0, 0, 1, 0);
 
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
@@ -355,10 +360,10 @@ static void draw_ball(void)
         glTranslatef(paddle_poz, -0.95, 0);
     else
         //pomeranje lopte
-        glTranslatef(ball.x,ball.y,ball.z);
+        glTranslatef(ball.x, ball.y, ball.z);
         
-    coloring( 0.8, 0.8, 0.9,20);
-    glutSolidSphere(BALLRAD,50,50);
+    coloring(0.8, 0.8, 0.9, 20);
+    glutSolidSphere(BALLRAD, 50, 50);
     
     glPopMatrix();
 }
@@ -368,12 +373,11 @@ static void draw_paddle(void)
     glPushMatrix();
     
     glTranslatef(paddle_poz, -1.0, 0.0);
-    coloring( 1.0, 0, 1.0, 20);
+    coloring(1.0, 0, 1.0, 20);
     //crtanje ivica paddle a
-    glDisable ( GL_LIGHTING );
-    glColor3f( 0.2, 0, 0.2);
     glBegin(GL_POLYGON);
     
+        glNormal3f(0, 1, 0);
         glVertex3f(0.075, 0.025, 0.025);
         glVertex3f(0.075, 0.025, -0.025);
         glVertex3f(0.125, 0.025, 0);
@@ -386,9 +390,9 @@ static void draw_paddle(void)
         glVertex3f(-0.125, 0.025, 0);
         
     glEnd();
-    glColor3f( 0.4, 0, 0.4);
     glBegin(GL_POLYGON);
-    
+        
+        glNormal3f(0.1, 0, 1);
         glVertex3f(0.075, 0.025, 0.025);
         glVertex3f(0.125, 0.025, 0);
         glVertex3f(0.125, -0.025, 0);
@@ -397,13 +401,13 @@ static void draw_paddle(void)
     glEnd();
     glBegin(GL_POLYGON);
     
+        glNormal3f(-0.5, 0, 1);
         glVertex3f(-0.075, 0.025, 0.025);
         glVertex3f(-0.125, 0.025, 0);
         glVertex3f(-0.125, -0.025, 0);
         glVertex3f(-0.075, -0.025, 0.025);
         
     glEnd();
-    glEnable ( GL_LIGHTING ); 
     
     glScalef(3.0, 1.0, 1.0);
     
@@ -457,7 +461,7 @@ static void draw_blocks(void)
             if(!map[i][j]){
                 glPushMatrix();
                 
-                coloring( 0, 0, 1, 0);
+                coloring(0, 0, 1, 0);
                 glTranslatef(0,
                              -0.45 + (9-j)*BLOCKSIZE,
                              0.45 - (9-(i-2*MPSIZE))*BLOCKSIZE);
@@ -469,24 +473,24 @@ static void draw_blocks(void)
         }
         glPopMatrix();
 }
-//crtanje fiksne mape
+//crtanje fiksirane mape
 static void draw_blocks_bg(void)
 {
 
     int i,j;
     glPushMatrix();
     //pozicioniranje i rotiranje
-    glTranslatef(0,0.85,0);
+    glTranslatef(0, 0.85, 0);
     glScalef(0.3, 0.3, 0.3);
-    glRotated( 60, 1, 0, 0);
-    glRotated( 45, 0, 1, 0);
+    glRotated(60, 1, 0, 0);
+    glRotated(45, 0, 1, 0);
     //crvena
     for (i=0; i<MPSIZE; i++)
         for(j=0; j<MPSIZE; j++){
             if(!map[i][j]){
                 glPushMatrix();
                 
-                coloring( 1, 0, 0, 0);
+                coloring(1, 0, 0, 0);
                 glTranslatef(-0.45 + i*BLOCKSIZE, 0.45 - j*BLOCKSIZE, 0);
                 glScalef(0.85, 0.85, 0.2);
                 glutSolidCube(BLOCKSIZE);
@@ -500,7 +504,7 @@ static void draw_blocks_bg(void)
             if(!map[i][j]){
                 glPushMatrix();
             
-                coloring( 0, 0.8, 0, 0);
+                coloring(0, 0.8, 0, 0);
                 glTranslatef(0.45 - (9-(i-MPSIZE))*BLOCKSIZE,
                              0,
                              -0.45 + j*BLOCKSIZE);
@@ -516,7 +520,7 @@ static void draw_blocks_bg(void)
             if(!map[i][j]){
                 glPushMatrix();
                 
-                coloring( 0.1, 0.1, 1, 0);
+                coloring(0.1, 0.1, 1, 0);
                 glTranslatef(0,
                              -0.45 + (9-j)*BLOCKSIZE,
                              0.45 - (9-(i-2*MPSIZE))*BLOCKSIZE);
@@ -604,11 +608,11 @@ static void collision_bb(void)
     //racucanje samo unutar matrice
     if(ball.y >= -0.5 - BALLRAD){
         //racunanje mozicije u matrici
-        if(ballvec.y>=0)
+        if(ballvec.y >= 0)
         j = ceil(-(ball.y + BALLRAD) * 10) + 4;
         else
         j = ceil(-(ball.y - BALLRAD) * 10) + 4;
-        if(ballvec.x>=0)
+        if(ballvec.x >= 0)
         i = ceil((ball.x - BALLRAD) * 10) + 4;
         else
         i = ceil((ball.x + BALLRAD) * 10) + 4;
